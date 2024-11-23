@@ -34,15 +34,17 @@ public class EmpController {
     }
 
     @PostMapping("/emps/export")
-    public void ExportExcel() {
+    public Result ExportExcel() {
         // 设置文件导出的路径
-        String realPath = "D://wsfile/";
+        String realPath = "F://wsfile/";
         File folder = new File(realPath);
         if (!folder.isDirectory()){
             folder.mkdirs();
         }
         String fileName = realPath  + "User" + System.currentTimeMillis() + ".xlsx";
         EasyExcel.write(fileName, Emp.class).sheet("用户表").doWrite(empService.findAll());
+
+        return Result.success(fileName);
     }
 
 
@@ -56,7 +58,6 @@ public class EmpController {
 
         EasyExcel.read(multipartFile.getInputStream(), Emp.class, new PageReadListener<Emp>(dataList -> {
             for (Emp emp : dataList) {
-
                 empService.insert(emp);
             }
         })).sheet().doRead();

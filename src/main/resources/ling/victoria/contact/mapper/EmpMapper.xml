@@ -44,7 +44,8 @@
         SET name = #{name},
             phone = #{phone},
             gender = #{gender},
-            isFavorite = #{isFavorite}
+            isFavorite = #{isFavorite},
+            update_time = now()
         WHERE id = #{id}
     </update>
 
