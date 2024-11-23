@@ -49,5 +49,11 @@ public class EmpServiceImpl implements EmpService {
         empMapper.insert(emp);
     }
 
+    @Override
+    public List<Emp> findAll() {
+
+        return empMapper.findAll();
+    }
+
 
 }

@@ -27,6 +27,13 @@ public interface EmpMapper {
     @Select("delete from emp where id=#{id}")
     void delete(Integer id);
 
+
+
+    //查询全部数据,导出excel
+    @Select("select * from emp")
+    List<Emp> findAll();
+
+
     void insert(Emp emp);
 
 

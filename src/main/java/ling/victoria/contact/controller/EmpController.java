@@ -1,5 +1,7 @@
 package ling.victoria.contact.controller;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.read.listener.PageReadListener;
 import ling.victoria.contact.pojo.Emp;
 import ling.victoria.contact.pojo.PageBean;
 import ling.victoria.contact.pojo.Result;
@@ -7,6 +9,10 @@ import ling.victoria.contact.service.EmpService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
 
 @Slf4j
 @CrossOrigin
@@ -26,6 +32,37 @@ public class EmpController {
         PageBean pageBean = empService.page(page, pageSize, name, phone, gender, isFavorite);
         return Result.success(pageBean);
     }
+
+    @PostMapping("/emps/export")
+    public void ExportExcel() {
+        // 设置文件导出的路径
+        String realPath = "D://wsfile/";
+        File folder = new File(realPath);
+        if (!folder.isDirectory()){
+            folder.mkdirs();
+        }
+        String fileName = realPath  + "User" + System.currentTimeMillis() + ".xlsx";
+        EasyExcel.write(fileName, Emp.class).sheet("用户表").doWrite(empService.findAll());
+    }
+
+
+
+
+    @PostMapping("/emps/import")
+    public void ImportExcel(MultipartFile multipartFile) throws IOException {
+        if (multipartFile.isEmpty()) {
+            return;
+        }
+
+        EasyExcel.read(multipartFile.getInputStream(), Emp.class, new PageReadListener<Emp>(dataList -> {
+            for (Emp emp : dataList) {
+
+                empService.insert(emp);
+            }
+        })).sheet().doRead();
+    }
+
+
 
     @PostMapping("/emps/edit")
     public Result edit(@RequestBody Emp emp) {
