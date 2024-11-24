@@ -13,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @CrossOrigin
@@ -41,19 +43,19 @@ public class EmpController {
         if (!folder.isDirectory()){
             folder.mkdirs();
         }
-        String fileName = realPath  + "User" + System.currentTimeMillis() + ".xlsx";
+        long time =System.currentTimeMillis();
+        String fileName = realPath  + "User" + time + ".xlsx";
         EasyExcel.write(fileName, Emp.class).sheet("用户表").doWrite(empService.findAll());
-
-        return Result.success(fileName);
+        return Result.success("/assets/"+"User" + time + ".xlsx");
     }
 
 
 
 
     @PostMapping("/emps/import")
-    public void ImportExcel(MultipartFile multipartFile) throws IOException {
+    public Result ImportExcel(MultipartFile multipartFile) throws IOException {
         if (multipartFile.isEmpty()) {
-            return;
+            return Result.error("文件为空");
         }
 
         EasyExcel.read(multipartFile.getInputStream(), Emp.class, new PageReadListener<Emp>(dataList -> {
@@ -61,6 +63,8 @@ public class EmpController {
                 empService.insert(emp);
             }
         })).sheet().doRead();
+
+        return Result.success("导入成功");
     }
 
 
