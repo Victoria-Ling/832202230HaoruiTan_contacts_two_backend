@@ -38,7 +38,8 @@ public class EmpController {
     @PostMapping("/emps/export")
     public Result ExportExcel() {
         // 设置文件导出的路径
-        String realPath = "F://wsfile/";
+        // 改成自己的系统
+        String realPath = "/www/wwwroot/project/upload/";
         File folder = new File(realPath);
         if (!folder.isDirectory()){
             folder.mkdirs();

@@ -10,6 +10,6 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // 将 /opt/static 目录下的文件映射到 /assets/** 路径下
         registry.addResourceHandler("/assets/**")
-                .addResourceLocations("file:F:/wsfile/");
+                .addResourceLocations("file:/www/wwwroot/project/upload/");
     }
 }
