@@ -2,6 +2,8 @@ package ling.victoria.contact.controller;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.read.listener.PageReadListener;
+import com.alibaba.excel.write.style.column.SimpleColumnWidthStyleStrategy;
+import com.alibaba.excel.write.style.row.SimpleRowHeightStyleStrategy;
 import ling.victoria.contact.pojo.Emp;
 import ling.victoria.contact.pojo.PageBean;
 import ling.victoria.contact.pojo.Result;
@@ -46,7 +48,9 @@ public class EmpController {
         }
         long time =System.currentTimeMillis();
         String fileName = realPath  + "User" + time + ".xlsx";
-        EasyExcel.write(fileName, Emp.class).sheet("用户表").doWrite(empService.findAll());
+
+
+        EasyExcel.write(fileName, Emp.class).sheet("用户表").registerWriteHandler(new SimpleColumnWidthStyleStrategy(25)).registerWriteHandler(new SimpleRowHeightStyleStrategy((short)30,(short)30)).doWrite(empService.findAll());
         return Result.success("/assets/"+"User" + time + ".xlsx");
     }
 
